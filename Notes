@@ -1,0 +1,45 @@
+Her er info om id til den åbne platform:
+ "id": "1ba2428f-1fc3-4159-82ff-869b87026bcd",
+ "secret": "3ab379e23032f8e94599ba2a75be13a4d49e846342d101a6899b27b823abff1e",
+
+7044bd04d1605c2c01795db73f902c9e91e75c00
+
+/**
+ * Implements hook_theme().
+ */
+//function ting_open_platform_theme($existing, $type, $theme, $path) {
+//  return array(
+//    'ting_open_platform_results' => array(
+//      'variables' => array('results' => NULL, 'module' => NULL),
+//      'file'      => 'ting_open_platform.pages.inc',
+//      'template'  => 'templates/ting-search-results',
+//    ),
+//  );
+//}
+
+/**
+ * Implements hook_menu().
+ */
+function ting_open_platform_menu() {
+  $items = array();
+
+//  $items['admin/config/ting/search'] = array(
+//    'title' => 'Search settings',
+//    'description' => 'Settings avialable for ting search.',
+//    'page callback' => 'drupal_get_form',
+//    'page arguments' => array('ting_open_platform_admin_settings'),
+//    'access arguments' => array('administer ting settings'),
+//    'file' => 'includes/ting_open_platform.admin.inc',
+//  );
+
+
+
+  return $items;
+}
+
+    "fields" => array(
+      "title",
+      "creator",
+      "pid"
+    ),
+
