@@ -59,7 +59,7 @@ function ting_open_platform_search_collection($query) {
     "pretty" => true,
     "q" => $query,
     "offset" => 0,
-    "limit" => 10,
+    "limit" => 15,
   );
   return ting_open_platform_request('search', $parameters);
 }
