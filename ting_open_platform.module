@@ -48,7 +48,23 @@ function ting_open_platform_search($query) {
   return ting_open_platform_request('search', $parameters);
 }
 
-function ting_open_platform_recommender($ids) {
+function ting_open_platform_search_collection($query) {
+  $parameters = array(
+    "fields" => array(
+      "title",
+      "collection",
+      "creator",
+      "pid",
+    ),
+    "pretty" => true,
+    "q" => $query,
+    "offset" => 0,
+    "limit" => 10,
+  );
+  return ting_open_platform_request('search', $parameters);
+}
+
+function ting_open_platform_recommender($ids, $number_of_objects = 20) {
   $parameters = array(
     "fields" => array(
       "title",
@@ -58,7 +74,7 @@ function ting_open_platform_recommender($ids) {
     "pretty" => true,
     "like" => $ids,
     "recommender" => 'default',
-    "limit" => 20,
+    "limit" => $number_of_objects,
   );
   return ting_open_platform_request('recommend', $parameters);
 }
