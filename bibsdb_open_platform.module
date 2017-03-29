@@ -6,31 +6,7 @@
  */
 
 
-
-/**
- * Implements hook_ctools_plugin_directory().
- *
- * It simply tells panels where to find the .inc files that define various
- * args, contexts, content_types.
- */
-function ting_open_platform_ctools_plugin_directory($module, $plugin) {
-  if ($module == 'ctools' && !empty($plugin)) {
-    return "plugins/$plugin";
-  }
-}
-
-function ting_open_platform_theme($existing, $type, $theme, $path) {
-  return array(
-    'ting_open_platform_covers' => array(
-      'variables' => array('results' => NULL),
-      'template'  => 'covers-search-result',
-      'path' => $path . '/templates',
-    ),
-  );
-}
-
-
-function ting_open_platform_search($query) {
+function bibsdb_open_platform_search($query) {
   $parameters = array(
     "fields" => array(
       "title",
@@ -45,10 +21,10 @@ function ting_open_platform_search($query) {
     "limit" => 20,
     "sort" => "date_descending",
   );
-  return ting_open_platform_request('search', $parameters);
+  return bibsdb_open_platform_request('search', $parameters);
 }
 
-function ting_open_platform_search_collection($query) {
+function bibsdb_open_platform_search_collection($query) {
   $parameters = array(
     "fields" => array(
       "title",
@@ -61,10 +37,10 @@ function ting_open_platform_search_collection($query) {
     "offset" => 0,
     "limit" => 15,
   );
-  return ting_open_platform_request('search', $parameters);
+  return bibsdb_open_platform_request('search', $parameters);
 }
 
-function ting_open_platform_recommender($ids, $number_of_objects = 20) {
+function bibsdb_open_platform_recommender($ids, $number_of_objects = 20) {
   $parameters = array(
     "fields" => array(
       "title",
@@ -76,25 +52,10 @@ function ting_open_platform_recommender($ids, $number_of_objects = 20) {
     "recommender" => 'default',
     "limit" => $number_of_objects,
   );
-  return ting_open_platform_request('recommend', $parameters);
+  return bibsdb_open_platform_request('recommend', $parameters);
 }
 
-function ting_open_platform_render_cover($data) {
-  $results = array();
-  foreach ($data as $object) {
-    if (isset($object->coverUrlFull)) {
-      $image = '<img src="' . $object->coverUrlFull[0]  . '" width="140" height="203" styling="height:203px">';
-      $results[] = array(
-      'snippet' => $image 
-      );
-    }  
-  }  
-  $content = theme('ting_open_platform_covers', array('results' => $results)); 
-  return $content;
-}
-
-
-function ting_open_platform_get_token() {
+function bibsdb_open_platform_get_token() {
   $key = "1ba2428f-1fc3-4159-82ff-869b87026bcd";
   $secret = "3ab379e23032f8e94599ba2a75be13a4d49e846342d101a6899b27b823abff1e";
 
@@ -109,8 +70,8 @@ function ting_open_platform_get_token() {
   return $token;
 }
 
-function ting_open_platform_request($operation, $parameters) {
-  $token = variable_get('ting_open_platform_token', '8fcb2229d117ac2912fec4d272df3986cb415140');
+function bibsdb_open_platform_request($operation, $parameters) {
+  $token = variable_get('bibsdb_open_platform_token', '8fcb2229d117ac2912fec4d272df3986cb415140');
   $parameters['access_token'] = '6c29a4e96187cd8951e85202f05a01f09eaf65ee';
   $service_url = 'https://openplatform.dbc.dk/v1/' . $operation;
   

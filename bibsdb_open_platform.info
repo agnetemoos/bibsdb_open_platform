@@ -1,8 +1,8 @@
-name = Ting Open Platform
+name = Bibsdb Open Platform
 description = Search using Open Platform
 package = Ding!
 version = "7.x-0.26"
 core = 7.x
-files[] = ting_open_platform.module
+files[] = bibsdb_open_platform.module
 dependencies[] = ting
 dependencies[] = search
