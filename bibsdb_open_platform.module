@@ -6,19 +6,19 @@
  */
 
 
-function bibsdb_open_platform_search($query) {
+function bibsdb_open_platform_search($query, $offset) {
   $parameters = array(
     "fields" => array(
       "title",
       "creator",
-      "pid",
+      "acIdentifier",
       'coverUrlFull',
     ),
     "pretty" => true,
     "timings" => true,
     "q" => $query,
-    "offset" => 0,
-    "limit" => 20,
+    "offset" => $offset,
+    "limit" => 16,
     "sort" => "date_descending",
   );
   return bibsdb_open_platform_request('search', $parameters);
@@ -30,12 +30,12 @@ function bibsdb_open_platform_search_collection($query) {
       "title",
       "collection",
       "creator",
-      "pid",
+      "acIdentifier",
     ),
     "pretty" => true,
     "q" => $query,
     "offset" => 0,
-    "limit" => 15,
+    "limit" => 16,
   );
   return bibsdb_open_platform_request('search', $parameters);
 }
@@ -55,24 +55,40 @@ function bibsdb_open_platform_recommender($ids, $number_of_objects = 20) {
   return bibsdb_open_platform_request('recommend', $parameters);
 }
 
-function bibsdb_open_platform_get_token() {
-  $key = "1ba2428f-1fc3-4159-82ff-869b87026bcd";
-  $secret = "3ab379e23032f8e94599ba2a75be13a4d49e846342d101a6899b27b823abff1e";
+/**
+ * Implements hook_cron().
+ * Calls function to renew token.
+ */
+function bibsdb_open_platform_cron() {
+  bibsdb_open_platform_get_token();
+}
 
-// request token
+
+function bibsdb_open_platform_get_token() {
+
+  $key = variable_get('open_platform_client_id');
+  $secret = variable_get('open_platform_client_secret');
+
+  // request token
   $basic_credentials = base64_encode($key.':'.$secret);
   $tk = curl_init('https://auth.dbc.dk/oauth/token');
   curl_setopt($tk, CURLOPT_HTTPHEADER, array('Authorization: Basic '.$basic_credentials, 'Content-Type: application/x-www-form-urlencoded;charset=UTF-8'));
-  curl_setopt($tk, CURLOPT_POSTFIELDS, 'grant_type=password&username=@773000&password=@773000');
+  curl_setopt($tk, CURLOPT_POSTFIELDS, 'grant_type=password&username=@754000&password=@754000');
   curl_setopt($tk, CURLOPT_RETURNTRANSFER, true);
   $token = json_decode(curl_exec($tk));
-  curl_close($tk);  
+  curl_close($tk); 
+
+  // save token
+  variable_set('open_platform_token', $token);
   return $token;
 }
 
 function bibsdb_open_platform_request($operation, $parameters) {
-  $token = variable_get('bibsdb_open_platform_token', '8fcb2229d117ac2912fec4d272df3986cb415140');
-  $parameters['access_token'] = '6c29a4e96187cd8951e85202f05a01f09eaf65ee';
+  $token = variable_get('open_platform_token');
+  if (!(isset($token->access_token))) {
+    $token = bibsdb_open_platform_get_token();
+  }
+  $parameters['access_token'] = $token->access_token;
   $service_url = 'https://openplatform.dbc.dk/v1/' . $operation;
   
   $curl = curl_init($service_url);
@@ -90,9 +106,6 @@ function bibsdb_open_platform_request($operation, $parameters) {
   }
   curl_close($curl);
   $decoded = json_decode($curl_response);
-  if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
-    //TODO Handle error
-  }
   return  $decoded;
 }
 
