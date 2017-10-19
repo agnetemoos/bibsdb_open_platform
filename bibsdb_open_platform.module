@@ -19,7 +19,7 @@ function bibsdb_open_platform_search($query, $offset) {
     "q" => $query,
     "offset" => $offset,
     "limit" => 16,
-    "sort" => "date_descending",
+    "sort" => "acquisitionDate_descending",
   );
   return bibsdb_open_platform_request('search', $parameters);
 }
