@@ -5,14 +5,15 @@
  * Enables search integration with Ting.
  */
 
-
 function bibsdb_open_platform_search($query, $offset) {
+
+  $query = "((" . $query . ") AND (holdingsitem.branch = (\"Biblioteket Augustenborg\" OR \"Biblioteket Broager\" OR \"Biblioteket Dybbøl\" OR \"Biblioteket Gråsten\" OR \"Biblioteket Hørup\" OR \"Biblioteket Nordborg\" OR \"Biblioteket Sønderborg\" OR \"Biblioteket Ulkebøl\" OR \"Biblioteket Vester Sottrup\" OR \"Biblioteks-afhentningssted Fynshav\" OR \"Biblioteks-afhentningssted Guderup\" OR \"Hotel\"))) and holdingsitem.agencyid=\"754000\"";
+
   $parameters = array(
     "fields" => array(
       "title",
       "creator",
       "acIdentifier",
-      'coverUrlFull',
     ),
     "pretty" => true,
     "timings" => true,
